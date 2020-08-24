@@ -17,7 +17,7 @@ class BookManagementTest extends TestCase
 
         $response = $this->post('/books', [
            'title' => 'Cool book title',
-           'author' => 'jonh',
+           'author_id' => 'jonh',
         ]);
 
         $book = Book::first();
@@ -34,7 +34,7 @@ class BookManagementTest extends TestCase
 
         $response = $this->post('/books', [
             'title' => '',
-            'author' => 'jonh',
+            'author_id' => 'jonh',
         ]);
 
         $response->assertSessionHasErrors('title');
@@ -46,10 +46,10 @@ class BookManagementTest extends TestCase
 
         $response = $this->post('/books', [
             'title' => 'cool book title',
-            'author' => '',
+            'author_id' => '',
         ]);
 
-        $response->assertSessionHasErrors('author');
+        $response->assertSessionHasErrors('author_id');
     }
 
     /** @test */
@@ -57,7 +57,7 @@ class BookManagementTest extends TestCase
     {
         $insert = $this->post('/books', [
             'title' => 'cool title',
-            'author' => 'john',
+            'author_id' => 'john',
         ]);
 
         $book = Book::first();
@@ -67,11 +67,12 @@ class BookManagementTest extends TestCase
 
         $update = $this->patch($book->path(), [
             'title' => 'New title',
-            'author' => 'New author',
+            'author_id' => 'New author',
         ]);
 
+
         $this->assertEquals('New title', Book::first()->title);
-        $this->assertEquals('New author', Book::first()->author);
+        $this->assertEquals(2, Book::first()->author_id);
         $update->assertRedirect($book->fresh()->path());
     }
 
@@ -80,7 +81,7 @@ class BookManagementTest extends TestCase
     {
         $insert = $this->post('/books', [
             'title' => 'cool title',
-            'author' => 'john',
+            'author_id' => 'john',
         ]);
 
         $book = Book::first();
