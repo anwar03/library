@@ -15,7 +15,7 @@ class BookTest extends TestCase
     {
         Book::create([
            'title' => 'Cool Title',
-           'author_id' => 1,
+           'author_id' => 'Doe',
         ]);
         $this->assertCount(1, Book::all());
     }

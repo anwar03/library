@@ -40,7 +40,6 @@ class AuthorManagementTest extends TestCase
 
         $book = Book::first();
         $author = Author::first();
-;
 
         $this->assertEquals($author->id, $book->author_id);
         $this->assertCount(1, Author::all());
