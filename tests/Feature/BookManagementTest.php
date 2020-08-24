@@ -15,14 +15,10 @@ class BookManagementTest extends TestCase
     {
         $this->withExceptionHandling();
 
-        $response = $this->post('/books', [
-           'title' => 'Cool book title',
-           'author_id' => 'jonh',
-        ]);
+        $response = $this->post('/books', $this->data());
 
         $book = Book::first();
 
-//        $response->assertOk();
         $this->assertCount(1, Book::all());
         $response->assertRedirect($book->path());
 
@@ -32,10 +28,9 @@ class BookManagementTest extends TestCase
     public function a_title_is_required()
     {
 
-        $response = $this->post('/books', [
+        $response = $this->post('/books', $this->data([
             'title' => '',
-            'author_id' => 'jonh',
-        ]);
+        ]));
 
         $response->assertSessionHasErrors('title');
     }
@@ -44,10 +39,7 @@ class BookManagementTest extends TestCase
     public function a_author_is_required()
     {
 
-        $response = $this->post('/books', [
-            'title' => 'cool book title',
-            'author_id' => '',
-        ]);
+        $response = $this->post('/books', $this->data(['author_id' => '']));
 
         $response->assertSessionHasErrors('author_id');
     }
@@ -55,20 +47,17 @@ class BookManagementTest extends TestCase
     /** @test */
     public function a_book_can_be_updated()
     {
-        $insert = $this->post('/books', [
-            'title' => 'cool title',
-            'author_id' => 'john',
-        ]);
+        $insert = $this->post('/books', $this->data());
 
         $book = Book::first();
         $this->assertCount(1, Book::all());
         $insert->assertRedirect($book->path());
 
 
-        $update = $this->patch($book->path(), [
+        $update = $this->patch($book->path(), $this->data([
             'title' => 'New title',
             'author_id' => 'New author',
-        ]);
+        ]));
 
 
         $this->assertEquals('New title', Book::first()->title);
@@ -79,10 +68,7 @@ class BookManagementTest extends TestCase
     /** @test */
     public function a_book_can_be_deleted()
     {
-        $insert = $this->post('/books', [
-            'title' => 'cool title',
-            'author_id' => 'john',
-        ]);
+        $insert = $this->post('/books', $this->data());
 
         $book = Book::first();
 
@@ -93,5 +79,17 @@ class BookManagementTest extends TestCase
 
         $this->assertCount(0, Book::all());
         $delete->assertRedirect('/books');
+    }
+
+    /**
+     * @param array $data
+     * @return string[]
+     */
+    private function data($data = [])
+    {
+        return array_merge([
+            'title' => 'Cool book title',
+            'author_id' => 'jonh',
+        ], $data);
     }
 }
