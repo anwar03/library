@@ -35,7 +35,7 @@ class AuthorManagementTest extends TestCase
 
         $this->post('/books', [
             'title' => 'Cool book title',
-            'author_id' => 'jonh',
+            'author_id' => 'jonh Doe',
         ]);
 
         $book = Book::first();
